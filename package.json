@@ -4,7 +4,11 @@
   "description": "Command line tools to set workflow",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "patch": "npm version patch && npm publish"
+  },
+  "bin": {
+    "iorizon": "bin/iorizon.js",
+    "io": "bin/iorizon.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +19,15 @@
   "bugs": {
     "url": "https://github.com/djokone/Iorizon-Cli/issues"
   },
-  "homepage": "https://github.com/djokone/Iorizon-Cli#readme"
+  "homepage": "https://github.com/djokone/Iorizon-Cli#readme",
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.11.0",
+    "font-ascii": "^1.1.16",
+    "fs": "0.0.1-security",
+    "node-emoji": "^1.8.1",
+    "node-jq": "^0.7.0",
+    "shelljs": "^0.7.8",
+    "unicorn": "0.0.1"
+  }
 }
