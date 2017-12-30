@@ -1,0 +1,11 @@
+/node_modules
+
+# Sublime text
+*.sublime-project
+*.sublime-workspace
+
+# File
+*.zip
+
+# Io core
+global-user-io.json
