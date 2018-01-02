@@ -6,7 +6,7 @@
   "author": "djokone@tim.potter@wanadoo.fr",
   "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "nyc mocha"
   },
   "bin": {
     "iorizon": "bin/iorizon",
@@ -37,5 +37,9 @@
     "stacktrace-js": "^2.0.0",
     "write-json": "^2.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.1.0",
+    "nyc": "^11.4.1"
+  }
 }
