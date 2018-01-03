@@ -5,6 +5,14 @@ var expect = chai.expect
 var should = chai.should
 let customLoader = new Loader('./test/ioTest.json')
 
+let forEach = function (iterator, callback) {
+  for (let iterate in iterator) {
+    let data = iterator[iterate]
+    let key = iterate
+    callback(data, key)
+  }
+}
+
 describe('Loader class', function () {
 
   let PathLoader, ObjectLoader, NudeLoader, AbsPathLoader
@@ -23,7 +31,7 @@ describe('Loader class', function () {
       })
       loaders['RelPath'] = {
         loader: PathLoader,
-        it: 'Should work with relative path'
+        it: 'Should work with relative path init'
       }
     })
 
@@ -38,7 +46,7 @@ describe('Loader class', function () {
       })
       loaders['AbsPath'] = {
         loader: AbsPathLoader,
-        it: 'Should work with absolute path'
+        it: 'Should work with absolute path init'
       }
     })
 
@@ -87,21 +95,33 @@ describe('Loader class', function () {
         expect(ObjectLoader.isLoaded).to.be.true
         expect(ObjectLoader.content).equal(data)
       })
-      
+      loaders['obj'] = {
+        loader: ObjectLoader,
+        it: 'Should work with data init'
+      }
     })
-    loaders['obj'] = {
-      loader: ObjectLoader,
-      it: 'Should work with data init'
-    }
   })
-  describe('# set content(val)', () => {
-    for (let data in loaders) {
-      let ref = loaders[data]
-      it(ref.it, () => {
-        ref.loader.content = { name: 'test' }
-        expect(ref.loader.reloaded).equal(1)
+  describe('#set/get content(val)', () => {
+    describe('set content with object', () => {
+      forEach(loaders, (data, key) => {
+        it(data.it, () => {
+          let content = { 
+            name: 'test' 
+          }
+          data.loader.content = content
+          expect(data.loader._content).to.deep.equal(content)
+          expect(data.loader.type).equal('object')
+          expect(data.loader.isLoaded).to.be.true
+        })
       })
-    }
+    })
+    describe('set content with relative path', () => {
+      forEach(loaders, (data, key) => {
+        it(data.it, () => {
+          data.loader.content = { name: 'test' }
+        })
+      })
+    })
   })
 
   describe.skip('# load (path, auto = true)', () => {

@@ -6,7 +6,8 @@
   "author": "djokone@tim.potter@wanadoo.fr",
   "license": "ISC",
   "scripts": {
-    "test": "nyc mocha -w"
+    "test": "nyc mocha",
+    "testing": "nyc mocha -w"
   },
   "bin": {
     "iorizon": "bin/iorizon",
