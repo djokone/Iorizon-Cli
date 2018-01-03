@@ -2,7 +2,6 @@ var nodePath = require('path');
 var shell = require('shelljs')
 var reg = require('./ioRegex')
 
-// console.log(path)
 class Loader {
   constructor (toLoad = false, config = {}) {
     let defaultConf = {
@@ -13,28 +12,67 @@ class Loader {
     toLoad === false ? this.autoRun = true : this.autoRun = false
     this.allowedExt = conf.allowedExt
     if (this.autoRun)
-      toLoad = shell.pwd().stdout // wil be a path
+      toLoad = this.defaultPath
+    this.reloaded = false
     this.ioFileName = conf.ioFileName
     this.isLoaded = false
+    this.isFileLoaded = false
     this._content = {}
-    this.urlReg = reg.url
-    this.absolutePathReg = reg.path.absolute
+    this._reg = {
+      url: reg.url,
+      relativePath: reg.path.relative,
+      absolutePath: reg.path.absolute
+    }
     if (typeof toLoad !== 'undefined') {
       this.content = toLoad
     }
   }
+
   static hasConfigFile () {
     
   }
+  get defaultPath () {
+    if (this.reloaded === false) {
+      this.reloaded = 0
+    } else {
+      this.reloaded ++
+    }
+    if (!this._defaultPath) {
+      if (typeof process.cwd === 'function') {
+        this._defaultPath = process.cwd()
+      } else {
+        this._defaultPath = __dirname
+      } 
+    }
+    return this._defaultPath
+  }
+
   set content (val) {
     if (typeof val === 'object') {
+      this.type = 'object'
       this._content = val
-      this.url = val
+      this.isLoaded = true
     } else if (typeof val === 'string') {
-      if (this.absolutePathReg.test(val)) {
+      let metaPath = nodePath.parse(val)
+      if (metaPath.base && this.isExtAllowed(metaPath.ext)) {
+        this.ioFileName = metaPath.base
+      } else if (!metaPath.ext === '') {
+        val = metaPath.dir
+      }
+      if (this._reg.relativePath.test(val)) {
+        this.type = 'relativePath'
+        this.url = val
+        this.path = {
+          relative: val,
+          absolute: nodePath.resolve(this.defaultPath, val)
+        }
+        this._content = this.load(this.path.absolute, false)
+      } else if (this._reg.absolutePath.test(val)) {
+        this.type = 'absolutePath'
         this.url = val
         this._content = this.load(val)
-      } else if (this.urlReg.test(val)) {
+      } else if (this._reg.url.test(val)) {
+        this.type = 'url'
         this.url = val
         this._content = this.download(val)
       }
@@ -52,24 +90,27 @@ class Loader {
     }
   }
   isExtAllowed (ext) {
-    for (testExt of this.allowedExt) {
-      if (testExt === ext) {
+    for (let Ext of this.allowedExt) {
+      if (Ext === ext) {
         return true
       }
     }
     return false
   }
-  load (path) {
+  load (path, auto = true) {
+    if (this.isExtAllowed(nodePath.parse(path).ext)) {
+      auto = false
+    }
+    if (auto)
+      path = nodePath.join(path, this.ioFileName)
     try {
-      let ioFile = require(nodePath.join(path, this.ioFileName))
+      let ioFile = require(path)
+      this.isFileLoaded = true
       this.isLoaded = true
       return ioFile
     } catch (e) {
-      this.isLoaded = false
+      this.isFileLoaded = false
       console.log(e)
-      // if (!this.autoRun) {
-      //   // console.log(e)
-      // }
     }
   }
   download () {
