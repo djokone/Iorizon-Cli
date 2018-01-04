@@ -125,5 +125,6 @@ describe('Loader class', function () {
   })
 
   describe.skip('# load (path, auto = true)', () => {
+    
   })
 })

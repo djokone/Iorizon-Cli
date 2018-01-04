@@ -4,6 +4,9 @@
 *.sublime-project
 *.sublime-workspace
 
+# Test
+/.nyc_output
+
 # File
 *.zip
 

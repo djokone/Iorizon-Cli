@@ -110,45 +110,11 @@ class Loader {
       return ioFile
     } catch (e) {
       this.isFileLoaded = false
-      console.log(e)
+      return e
     }
   }
   download () {
   }
-  // get parsedArgv () {
-  //   let parsed = {}
-  //   parsed.process = []
-  //   this.absolutePathReg.test(process.argv[2]) ? parsed.process.io = process.argv[2] : parsed.process.io = process.argv[1]
-  //   parsed.cmd = []
-  //   parsed.options = []
-  //   let index = 0
-  //   for (let argv of process.argv) {
-  //     if (/^([a-zA-Z]):(([\\]{1,2}|[\/])[a-zA-Z_-]*)*/.test(argv)) {
-  //       let parseArgv = {
-  //         path: argv,
-  //         index
-  //       }
-  //       parsed.process.push(parseArgv)
-  //     }
-  //     if (/^[a-z]*$/.test(argv)) {
-  //       let parseArgv = {
-  //         name: argv,
-  //         index
-  //       }
-  //       parsed.cmd.push(parseArgv)
-  //     }
-  //     if (/^--[a-z]{2,}/.test(argv)||/^-[a-z]{1}/.test(argv)) {
-  //       let parseArgv = {
-  //         name: argv,
-  //         argIndex: index + 1,
-  //         index
-  //       }
-  //       parsed.options.push(parseArgv)
-  //     }
-  //     index++
-  //   }
-  //   return parsed
-  // }
 }
 
 module.exports = Loader
