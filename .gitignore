@@ -1,0 +1,14 @@
+/node_modules
+
+# Sublime text
+*.sublime-project
+*.sublime-workspace
+
+# Test
+/.nyc_output
+
+# File
+*.zip
+
+# Io core
+global-user-io.json

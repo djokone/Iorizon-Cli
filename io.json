@@ -1,0 +1,32 @@
+{
+  "name": "iorizon-core",
+  "alias": {
+    "sites": "e:/sites",
+    "factory": "@sites/myModules/",
+    "cakephp3": "@sites/Cakephp3",
+    "imperial": "@cakephp3/Imperial",
+    "npm": "@factory/NPM",
+    "io": "@npm/Iorizon",
+    "ioCore": "@npm/Scripts/Iorizon-cli",
+    "workflow": "@factory/workflow",
+    "builds": "@npm/Builds"
+  },
+  "options": {
+    "--deep|-d": ["number"],
+    "--test|-t": ["number"],
+    "--global|-g": false,
+    "--current|-c": false
+  },
+  "workflow": "@workflow/imperial",
+  "modules": {
+    "init": {
+      "url": "./bin/cmd/init"
+    },
+    "alias": {
+      "url": "./bin/cmd/alias"
+    },
+    "workflow": {
+      "url": "./bin/cmd/workflow"
+    }
+  }
+}

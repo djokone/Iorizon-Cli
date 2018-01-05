@@ -1,0 +1,36 @@
+#! /usr/bin/env node 
+var io = require('../lib/Io.js')
+var writeJson = require('write-json'); 
+var path = require('path')
+var exist = require('fs').existsSync
+var color = require('chalk')
+var textPrompt = require('text-prompt')
+var switchPrompt = require('switch-prompt')
+
+let init = new io()
+let configFilePath = path.resolve(init.currentPath, 'io.json')
+let confirmInit = false
+let conf = {}
+console.log(init.currentPath)
+if (exist(configFilePath)) {
+  console.info(color.yellow('You all ready have a configuration file !'))
+  switchPrompt('Do you want to overwrite with a new one ?', 'yes', 'no', true)
+    // .on('data', (e) => console.log('Interim value', e.value))
+    .on('submit', (v) => {
+      initialize(v)
+    })
+    // .on('abort', (v) => console.log('Aborted with', v))
+} else {
+  // confirmInit = true
+  initialize(true)
+}
+function initialize (confirm) {
+  if (confirm) {
+    writeJson.sync(
+        path.resolve(init.currentPath, 'io.json'),
+        conf)
+    console.info(color.black.bgGreen(' Successfull initialization ! '))
+  }
+}
+// console.log(confirmInit)
+

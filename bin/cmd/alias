@@ -1,0 +1,58 @@
+#! /usr/bin/env node 
+var program = require('commander');
+var path = require('path');
+var Io = require('../lib/Io')
+var View = require('../lib/view');
+var fs = require('fs')
+var color = require('chalk')
+// require('../lib/debugger')
+
+
+let io = new Io()
+let ioConf = io.argv.global
+let options = {
+  head: ["Alias", "Path to alias", "Has config", "Path Exist"],
+  style: {head: ['green']},
+  colWidths: [15, 60, 15, 15]
+}
+var currentTable = new View(options, 'simple');
+var globalTable = new View(options, 'simple');
+// console.log(ioConf.options.current)
+if (!ioConf.options.global) {
+  console.info('')
+  console.info(color.yellow('Alias in the current directory :'))
+  if (io.hasCurrentModules && io.current.isLoaded) {
+    io.current.alias.each((v, k) => {
+      // console.log(typeof io.global.alias.paths[v] === 'undefined')
+      let exist = fs.existsSync(io.global.alias.paths[v])
+      let hasConf = false
+      if (typeof io.global.alias.paths[v] !== 'undefined') {
+        hasConf = fs.existsSync(path.resolve(io.global.alias.paths[v], 'io.json'))
+      }
+      hasConf ? hasConf = color.black.bgGreen(hasConf + ' ') : hasConf = color.bgRed(hasConf)
+      exist ? exist = color.black.bgGreen(exist + ' ') : exist = color.bgRed(exist)
+      currentTable.push([v, io.current.alias.paths[v], hasConf, exist]);
+      // console.log(buildManager.alias)
+    })
+    console.info(currentTable.toString());
+  } else {
+    console.info(' ' + color.bgRed('No alias in this directory, because you need to initialize it !'))
+  }
+}
+// console.log(io.globalPathFile)
+if (!ioConf.options.current) {
+  console.info('')
+  console.info(color.yellow('Global alias :'))
+  if (io.global.isLoaded) {
+    io.global.alias.each((v, k) => {
+      let exist = fs.existsSync(io.global.alias.paths[v])
+      let hasConf = fs.existsSync(path.resolve(io.global.alias.paths[v], 'io.json'))
+      hasConf ? hasConf = color.black.bgGreen(hasConf + ' ') : hasConf = color.bgRed(hasConf)
+      exist ? exist = color.black.bgGreen(exist + ' ') : exist = color.bgRed(exist)
+      globalTable.push([v, io.global.alias.paths[v], hasConf, exist]);
+      // console.log(buildManager.alias)
+    })
+    console.info(globalTable.toString());
+  }  
+}
+
