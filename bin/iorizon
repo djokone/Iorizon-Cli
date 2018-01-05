@@ -23,10 +23,6 @@ if (!io.cmd) {
   console.info('')
 }
 if (!io.cmd) {
-  console.info('')
-  console.info(color.green('Iorizon') + ' version ' + color.yellow(version) + ' - ' + color.bgRed(' Made with ♥ '))
-  console.info('')
-
   console.info(color.yellow('Usage :'))
   console.info('  io || iorizon [command] --options [arguments]')
   console.info('')

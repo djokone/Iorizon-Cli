@@ -1,8 +1,8 @@
 {
   "name": "iorizon-cli",
-  "version": "1.0.0",
+  "version": "1.4.0",
   "description": "Command line tools to set workflow",
-  "main": "index.js",
+  "main": "bin/lib/Io.js",
   "author": "djokone@tim.potter@wanadoo.fr",
   "license": "ISC",
   "scripts": {
