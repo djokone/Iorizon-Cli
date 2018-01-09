@@ -7,13 +7,20 @@ const reg = require('./ioRegex')
 // require('../lib/debugger')
 // console.log(__dirname)
 class Io {
-  constructor (digest = false) {
+  constructor (config = {}, digest = false) {
+    this._process = false
+    if (config.process) {
+      this._process = config.process
+    }
     this.globalFolder = 'iorizon-cli'
     this.iorizonCliPathFolder = 'iorizon-cli/bin/iorizon'
     this.ioFile = 'io.json'
     this.commandPriority = ['current', 'global']
     this._globalPath = false
     this._argv = false
+    if (config.argv) {
+      this.argv = config.argv
+    }
     this.isInit = false
     if (!digest) {
       this.init()
@@ -70,6 +77,21 @@ class Io {
   }
   get hasCurrentModules () {
     return typeof this.current.content.modules !== "undefined"
+  }
+
+  get process () {
+    if (this._process === false) {
+      return process
+    } else {
+      return this._process
+    }
+  }
+  get processArgv () {
+    if (this.process.argv) {
+      return this.process.argv
+    } else {
+      false
+    }
   }
   get options () {
     let res = this._initOptions()
@@ -156,7 +178,7 @@ class Io {
    * @todo 
    * Make a proper deep object
    ********************************/
-  parseArgv (argvs = process.argv) {
+  parseArgv (argvs = this.process.argv) {
     // console.log(argvs)
     let parsed = {}
     parsed.process = []
@@ -338,6 +360,15 @@ class Io {
       }
     }
     return cmd
+  }
+  set argv (val) {
+    if (Array.isArray(val)) {
+      this._processArgv = val
+      this._argv = this.parseArgv(val)
+    } else {
+      this._argv = val
+    }
+    
   }
   get argv () {
     if (!this._argv) {
