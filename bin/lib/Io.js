@@ -4,7 +4,7 @@ var fs = require('fs');
 var utils = require('./utils');
 var shell = require("shelljs");
 const reg = require('./ioRegex')
-// require('../lib/debugger')
+require('../lib/debugger')
 // console.log(__dirname)
 class Io {
   constructor (digest = false) {
@@ -45,8 +45,14 @@ class Io {
     this.global.argv = this.argv
   }
   get cmd () {
-    if (typeof this.argv.current !== 'undefined') {
+    if (typeof this.argv.current !== 'undefined' && Array.isArray(this.argv.current.cmd)) {
       for (let cmd in this.argv.current.cmd) {
+        return cmd
+        break
+      }
+      return false
+    } else if (Array.isArray(this.argv.cmd)) {
+      for (let cmd in this.argv.cmd) {
         return cmd
         break
       }
@@ -120,11 +126,10 @@ class Io {
         } else {
           console.warn('This cmd : ' + this.cmd + ', doesn\'t exist')
         }
-
       }
     } else {
       console.error('You have to call init() function before running subcommands !')
-    }   
+    }  
   }
   /**
    * Parse node js process.argv array to an object
@@ -327,6 +332,7 @@ class Io {
       this.module = parsed.current.loader
       this.hasModule = true
     }
+    console.log(parsed)
     return parsed
   }
   get parentCmd () {
