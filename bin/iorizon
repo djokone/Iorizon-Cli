@@ -8,7 +8,6 @@ var formPhrase = require('font-ascii').default
 var logo = require('./logo.js')
 
 let io = new Io()
-// console.log(io.options.global)
 let options = {
   head: ['Commands', 'Path to the command'],
   style: {head: ['green']},

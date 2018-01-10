@@ -95,7 +95,6 @@ class Io {
   }
   get options () {
     let res = this._syncOptions()
-    // console.log(this.hasModule)
     if (this.hasModule && this.current.modules.getModuleOptions(this.parentCmd[0])) {
       let currentRes = this.current.modules.getModuleOptions(this.parentCmd[0])
       // console.log(currentRes)
@@ -215,6 +214,7 @@ class Io {
         meta.cmdProcessCount = 0
         meta.current.process++
         let ioPath = this.pathToIoFile(argv)
+        // console.log(ioPath)
         meta.current.ioPath = ioPath
         let loader = false
         if (ioPath !== false) {
@@ -318,14 +318,15 @@ class Io {
       if (reg.option.normal.test(argv) || reg.option.shortcut.test(argv)) {
         let targetOpt
         if (meta.cmd) {
-          console.log(cmdKey)
+          // console.log(cmdKey)
           targetOpt = target[cmdKey][meta.cmd.key]._options
-          console.log(target)
+          // console.log(target)
         } else {
           targetOpt = target.options
         }
         meta.options = {}
-        // console.log(target.loader._option)
+        // console.log(meta)
+        // console.log(target)
         let opt = target.loader._options.get(argv)
         if (target.loader._options && opt) {
           meta.options = opt
@@ -341,7 +342,6 @@ class Io {
         } else {
           throw new Error('Io \'' + argv + '\' option is missing in ' + target.loader.name + ' configuration at location: ' + path.normalize(path.resolve(target.process, target.loader.ioFileName)))
         }
-        // target.options.meta = meta.options
       }
       prev = {meta, data}
       index++
@@ -396,7 +396,8 @@ class Io {
     // }
   }
   get inModule () {
-    if (this.hasModule) {
+    // console.log(this.hasModule )
+    if (this.hasModule && this.module) {
       return this.module.modules[this.cmd] !== 'undefined'
     } else {
       return false
@@ -436,7 +437,6 @@ class Io {
   }
   pathToIoFile (pathTo) {
     let first = true
-    // console.log(pathTo)
     pathTo = path.normalize(pathTo)
     let rootPath = path.normalize(path.parse(pathTo).root)
     let file
