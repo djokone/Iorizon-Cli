@@ -1,3 +1,19 @@
 {
-  "name": "io Json Test"
+  "name": "io Json Test",
+  "alias": {
+    "sites": "e:/sites",
+    "factory": "@sites/myModules/",
+    "cakephp3": "@sites/Cakephp3"
+  },
+  "modules": {
+    "init": {
+      "url": "./bin/cmd/init"
+    },
+    "alias": {
+      "url": "./bin/cmd/alias"
+    },
+    "workflow": {
+      "url": "./bin/cmd/workflow"
+    }
+  }
 }

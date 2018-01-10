@@ -5,7 +5,24 @@ let capitalize = function capitalize(string) {
 let escape = function escapeRegExp(text) {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 }
+
+let forEach = function (iterator, callback) {
+  if (Array.isArray(iterator)) {
+    for (let iterate of iterator) {
+      let data = iterator[iterate]
+      let key = iterate
+      callback(data, key)
+    }  
+  } else {
+    for (let iterate in iterator) {
+      let data = iterator[iterate]
+      let key = iterate
+      callback(data, key)
+    }
+  }
+}
 module.exports = {
   capitalize,
-  escape
+  escape,
+  forEach
 }

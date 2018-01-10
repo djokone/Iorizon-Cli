@@ -22,30 +22,36 @@ if (!io.cmd) {
   console.info(color.green('Iorizon') + ' version ' + color.yellow(version) + ' - ' + color.bgRed(' Made with ♥ '))
   console.info('')
 }
-console.log(io.cmd)
+
 if (!io.cmd) {
   console.info(color.yellow('Usage :'))
   console.info('  io || iorizon [command] --options [arguments]')
   console.info('')
-  console.info('')
-  console.info(color.yellow('All the current commands :'))
-  if (io.hasCurrentModules && io.current.isLoaded) {
-    io.current.modules.each((v, k) => {
-      currentModules.push([v, io.current.alias.parseUrl(k.url)])
-    })
-    console.info(currentModules.toString())
-  } else {
-    console.log(' ' + color.bgRed(' No commands in this directory ! '))
+
+  // current Cmd
+  if (!io.options.global || (io.options.global && io.options.current)) {
+    console.info('')
+    console.info(color.yellow('All the current commands :'))
+    if (io.hasCurrentModules && io.current.isLoaded) {
+      io.current.modules.each((v, k) => {
+        currentModules.push([v, io.current.alias.parseUrl(k.url)])
+      })
+      console.info(currentModules.toString())
+    } else {
+      console.log(' ' + color.bgRed(' No commands in this directory ! '))
+    }  
   }
-  console.info('')
-  console.info(color.yellow('All the global commands :'))
-  if (io.global.isLoaded) {
-    io.global.modules.each((v, k) => {
-      globalModules.push([v, io.global.alias.parseUrl(k.url)])
-    })
-    console.info(globalModules.toString())
-  } else {
-    console.error(color.red('Iorizon has not been loaded'))
+  if (!io.options.current || (io.options.global && io.options.current)) {
+    console.info('')
+    console.info(color.yellow('All the global commands :'))
+    if (io.global.isLoaded) {
+      io.global.modules.each((v, k) => {
+        globalModules.push([v, io.global.alias.parseUrl(k.url)])
+      })
+      console.info(globalModules.toString())
+    } else {
+      console.error(color.red('Iorizon has not been loaded'))
+    }
   }
 } else {
   io.runSubCommand()
