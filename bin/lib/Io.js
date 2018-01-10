@@ -26,10 +26,10 @@ class Io {
       this.init()
     }
     this.globalInit()
-    this.ioRequire()
+    // this.ioRequire()
   }
   ioRequire () {
-    console.log('io Require')
+    // console.log('io Require')
     require = new Proxy (require, {
       apply: function (target, thisArg, argument) {
         console.log(target)
@@ -94,25 +94,27 @@ class Io {
     }
   }
   get options () {
-    let res = this._initOptions()
+    let res = this._syncOptions()
+    // console.log(this.hasModule)
     if (this.hasModule && this.current.modules.getModuleOptions(this.parentCmd[0])) {
       let currentRes = this.current.modules.getModuleOptions(this.parentCmd[0])
+      // console.log(currentRes)
       res = Object.assign({}, res, currentRes)
     }
     return res
   }
-  _initOptions () {
+  //sync current options
+  _syncOptions () {
     let res = {}
     let current = this.argv.current
+    // console.log(cu)
     current.loader._options.each((v, k) => {
       let opt = current.loader._options.get(v)
       res[opt.meta.option.name] = opt.value
     })
-    for (let cmd in current.cmd) {
-      for (let option in current.cmd[cmd].options) {
-        let opt = current.cmd[cmd].options[option]
-        res[option] = opt.value
-      }
+    for (let option in current.options) {
+      let opt = current.options[option]
+      res[option] = opt.value
     }
     return res
   }
