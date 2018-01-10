@@ -2,35 +2,32 @@ let Io = require('../bin/lib/Io')
 let CP = require('child_process')
 var chai = require('chai')
 var path = require('path')
+let { resolve, parse, normalize } = path
+let { existsSync } = require('fs')
 var expect = chai.expect
 var should = chai.should
+let { env, cmds } = require('./env/process')
+let { forEach } = require('../bin/lib/utils')
 
 let IoCoreConf = require('../io.json')
 
-// Io Core Windows Process Argv
-let IoWPA = [
-  'E:\\App\\nodeJs\\node.exe',
-  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\iorizon',
-  '-g',
-  'alias',
-]
-
-// Alias Windows Process Argv
-// cmd: io alias
-// current: alias
-let AWPA = [
-  'E:\\App\\nodeJs\\node.exe',
-  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\cmd\\alias',
-  'alias',
-  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\iorizon'
-]
+let nodeProcess = process.argv0
+let ioProcess = normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/iorizon'))
+let aliasProcess = normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/cmd/alias'))
 
 describe('Io class', () => {
-  let InitIoAWPA
+  let InitIoPA
+  describe('Environement', () => {
+    forEach(env, (v, k) => {
+      it('Should have ' + v.name + ' path : ' + v.path, () => {
+        expect(existsSync(v.path)).to.be.true
+      })
+    })
+  })
   describe('#constructor ()', () => {
     describe('In the io process', () => {
-      InitIoWPA = new Io({
-        argv: IoWPA
+      InitIoPA = new Io({
+        argv: cmds[0].processes[0].argv
       })
       let IoCoreOptions = {
         deep: 0,
@@ -38,20 +35,29 @@ describe('Io class', () => {
         global: true,
         current: false
       }
+      // console.log(InitIoPA)
       it('Should have a cmd propertie', function () {
-        expect(InitIoWPA.cmd).equal('alias')
+        expect(InitIoPA.cmd).equal('alias')
       })
 
       it('Should parse argv', function () {
-        expect(InitIoWPA.argv.current.options.global).to.deep.equal({value: true, key: '-g'})
+        expect(InitIoPA.argv.current.options.global).to.deep.equal({value: true, key: '-g'})
       })
-      console.log(InitIoWPA.argv.current)
-      // it('Should init all the ioLoader', function () {
-      //   expect(Init)
-      // })
+      it('Should find Io path file', () => {
+        // expect('')
+      })
+      it('Should init all the ioLoader', function () {
+        expect(InitIoPA.global.isLoaded).to.be.true
+        expect(InitIoPA.current.isLoaded).to.be.true
+      })
       it('Should load right options', function () {
-        expect(InitIoWPA.options).to.deep.equal(IoCoreOptions)
+        expect(InitIoPA.options).to.deep.equal(IoCoreOptions)
       })
     })
   })
+
+  // describe('Should find path to io file', () => {
+  //   init
+  //   it('Should')
+  // })
 })

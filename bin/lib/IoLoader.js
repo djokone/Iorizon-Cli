@@ -1,5 +1,5 @@
 var Loader = require('./Loader')
-var aliasLoader = require('./alias')
+var aliasLoader = require('./AliasLoader')
 var ModuleLoader = require('./ModuleLoader')
 var OptionsLoader = require('./OptionsLoader')
 var reg = require('./ioRegex')
