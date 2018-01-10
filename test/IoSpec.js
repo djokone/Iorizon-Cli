@@ -5,14 +5,53 @@ var path = require('path')
 var expect = chai.expect
 var should = chai.should
 
-// test alias command
-let alias = {}
+let IoCoreConf = require('../io.json')
 
-console.log(ioAlias.process)
+// Io Core Windows Process Argv
+let IoWPA = [
+  'E:\\App\\nodeJs\\node.exe',
+  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\iorizon',
+  '-g',
+  'alias',
+]
+
+// Alias Windows Process Argv
+// cmd: io alias
+// current: alias
+let AWPA = [
+  'E:\\App\\nodeJs\\node.exe',
+  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\cmd\\alias',
+  'alias',
+  'E:\\App\\nodeJs\\node_modules\\iorizon-cli\\bin\\iorizon'
+]
+
 describe('Io class', () => {
-  let ioAliasInit
+  let InitIoAWPA
   describe('#constructor ()', () => {
-    ioAliasInit = new Io({argv: ioAlias})
-    // console.log(ioAliasInit)
+    describe('In the io process', () => {
+      InitIoWPA = new Io({
+        argv: IoWPA
+      })
+      let IoCoreOptions = {
+        deep: 0,
+        test: 0,
+        global: true,
+        current: false
+      }
+      it('Should have a cmd propertie', function () {
+        expect(InitIoWPA.cmd).equal('alias')
+      })
+
+      it('Should parse argv', function () {
+        expect(InitIoWPA.argv.current.options.global).to.deep.equal({value: true, key: '-g'})
+      })
+      console.log(InitIoWPA.argv.current)
+      // it('Should init all the ioLoader', function () {
+      //   expect(Init)
+      // })
+      it('Should load right options', function () {
+        expect(InitIoWPA.options).to.deep.equal(IoCoreOptions)
+      })
+    })
   })
 })
