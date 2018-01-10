@@ -4,14 +4,7 @@ var path = require('path')
 var expect = chai.expect
 var should = chai.should
 let customLoader = new Loader('./test/ioTest.json')
-
-let forEach = function (iterator, callback) {
-  for (let iterate in iterator) {
-    let data = iterator[iterate]
-    let key = iterate
-    callback(data, key)
-  }
-}
+let { forEach } = require('../bin/lib/utils')
 
 describe('Loader class', function () {
 

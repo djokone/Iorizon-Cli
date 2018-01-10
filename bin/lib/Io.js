@@ -7,22 +7,29 @@ const reg = require('./ioRegex')
 // require('../lib/debugger')
 // console.log(__dirname)
 class Io {
-  constructor (digest = false) {
+  constructor (config = {}, digest = false) {
+    this._process = false
+    if (config.process) {
+      this._process = config.process
+    }
     this.globalFolder = 'iorizon-cli'
     this.iorizonCliPathFolder = 'iorizon-cli/bin/iorizon'
     this.ioFile = 'io.json'
     this.commandPriority = ['current', 'global']
     this._globalPath = false
     this._argv = false
+    if (config.argv) {
+      this.argv = config.argv
+    }
     this.isInit = false
     if (!digest) {
       this.init()
     }
     this.globalInit()
-    this.ioRequire()
+    // this.ioRequire()
   }
   ioRequire () {
-    console.log('io Require')
+    // console.log('io Require')
     require = new Proxy (require, {
       apply: function (target, thisArg, argument) {
         console.log(target)
@@ -71,26 +78,42 @@ class Io {
   get hasCurrentModules () {
     return typeof this.current.content.modules !== "undefined"
   }
+
+  get process () {
+    if (this._process === false) {
+      return process
+    } else {
+      return this._process
+    }
+  }
+  get processArgv () {
+    if (this.process.argv) {
+      return this.process.argv
+    } else {
+      false
+    }
+  }
   get options () {
-    let res = this._initOptions()
+    let res = this._syncOptions()
     if (this.hasModule && this.current.modules.getModuleOptions(this.parentCmd[0])) {
       let currentRes = this.current.modules.getModuleOptions(this.parentCmd[0])
+      // console.log(currentRes)
       res = Object.assign({}, res, currentRes)
     }
     return res
   }
-  _initOptions () {
+  //sync current options
+  _syncOptions () {
     let res = {}
     let current = this.argv.current
+    // console.log(cu)
     current.loader._options.each((v, k) => {
       let opt = current.loader._options.get(v)
       res[opt.meta.option.name] = opt.value
     })
-    for (let cmd in current.cmd) {
-      for (let option in current.cmd[cmd].options) {
-        let opt = current.cmd[cmd].options[option]
-        res[option] = opt.value
-      }
+    for (let option in current.options) {
+      let opt = current.options[option]
+      res[option] = opt.value
     }
     return res
   }
@@ -156,7 +179,7 @@ class Io {
    * @todo 
    * Make a proper deep object
    ********************************/
-  parseArgv (argvs = process.argv) {
+  parseArgv (argvs = this.process.argv) {
     // console.log(argvs)
     let parsed = {}
     parsed.process = []
@@ -191,6 +214,7 @@ class Io {
         meta.cmdProcessCount = 0
         meta.current.process++
         let ioPath = this.pathToIoFile(argv)
+        // console.log(ioPath)
         meta.current.ioPath = ioPath
         let loader = false
         if (ioPath !== false) {
@@ -294,14 +318,15 @@ class Io {
       if (reg.option.normal.test(argv) || reg.option.shortcut.test(argv)) {
         let targetOpt
         if (meta.cmd) {
-          console.log(cmdKey)
+          // console.log(cmdKey)
           targetOpt = target[cmdKey][meta.cmd.key]._options
-          console.log(target)
+          // console.log(target)
         } else {
           targetOpt = target.options
         }
         meta.options = {}
-        // console.log(target.loader._option)
+        // console.log(meta)
+        // console.log(target)
         let opt = target.loader._options.get(argv)
         if (target.loader._options && opt) {
           meta.options = opt
@@ -317,7 +342,6 @@ class Io {
         } else {
           throw new Error('Io \'' + argv + '\' option is missing in ' + target.loader.name + ' configuration at location: ' + path.normalize(path.resolve(target.process, target.loader.ioFileName)))
         }
-        // target.options.meta = meta.options
       }
       prev = {meta, data}
       index++
@@ -338,6 +362,15 @@ class Io {
       }
     }
     return cmd
+  }
+  set argv (val) {
+    if (Array.isArray(val)) {
+      this._processArgv = val
+      this._argv = this.parseArgv(val)
+    } else {
+      this._argv = val
+    }
+    
   }
   get argv () {
     if (!this._argv) {
@@ -363,7 +396,8 @@ class Io {
     // }
   }
   get inModule () {
-    if (this.hasModule) {
+    // console.log(this.hasModule )
+    if (this.hasModule && this.module) {
       return this.module.modules[this.cmd] !== 'undefined'
     } else {
       return false
@@ -403,7 +437,6 @@ class Io {
   }
   pathToIoFile (pathTo) {
     let first = true
-    // console.log(pathTo)
     pathTo = path.normalize(pathTo)
     let rootPath = path.normalize(path.parse(pathTo).root)
     let file
