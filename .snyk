@@ -1,6 +1,22 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.10.1
-ignore: {}
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  'npm:cli:20160615':
+    - consolelog > grunt-contrib-jshint > jshint > cli:
+        reason: None given
+        expires: '2018-02-09T18:25:57.004Z'
+  'npm:qs:20170213':
+    - consolelog > grunt-contrib-watch > tiny-lr > qs:
+        reason: None given
+        expires: '2018-02-09T18:25:57.004Z'
+  'npm:shelljs:20140723':
+    - shelljs:
+        reason: None given
+        expires: '2018-02-09T18:25:57.004Z'
+    - consolelog > grunt-contrib-jshint > jshint > shelljs:
+        reason: None given
+        expires: '2018-02-09T18:25:57.005Z'
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:minimatch:20160620':
@@ -9,9 +25,9 @@ patch:
     - consolelog > grunt > minimatch:
         patched: '2018-01-10T17:54:43.717Z'
     - consolelog > grunt-contrib-watch > gaze > globule > glob > minimatch:
-        patched: '2018-01-10T17:54:43.717Z'
+        patched: '2018-01-10T18:28:02.448Z'
     - consolelog > grunt-contrib-watch > gaze > globule > minimatch:
-        patched: '2018-01-10T17:54:43.717Z'
+        patched: '2018-01-10T18:28:02.448Z'
     - consolelog > grunt-contrib-jshint > jshint > minimatch:
         patched: '2018-01-10T17:54:43.717Z'
     - consolelog > load-grunt-tasks > multimatch > minimatch:
@@ -22,9 +38,43 @@ patch:
         patched: '2018-01-10T17:54:43.717Z'
     - consolelog > grunt-contrib-jshint > jshint > cli > glob > minimatch:
         patched: '2018-01-10T17:54:43.717Z'
+    - consolelog > grunt > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > grunt > glob > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > load-grunt-tasks > findup-sync > glob > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > grunt > findup-sync > glob > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > load-grunt-tasks > multimatch > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2018-01-10T18:23:12.086Z'
+    - consolelog > grunt > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > grunt > glob > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > load-grunt-tasks > findup-sync > glob > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > grunt > findup-sync > glob > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > grunt-contrib-jshint > jshint > cli > glob > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > load-grunt-tasks > multimatch > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
+    - consolelog > grunt-contrib-jshint > jshint > minimatch:
+        patched: '2018-01-10T18:28:02.448Z'
   'npm:qs:20140806-1':
     - consolelog > grunt-contrib-watch > tiny-lr > qs:
-        patched: '2018-01-10T17:54:43.717Z'
+        patched: '2018-01-10T18:28:02.448Z'
   'npm:uglify-js:20151024':
     - consolelog > grunt-contrib-uglify > uglify-js:
-        patched: '2018-01-10T17:54:43.717Z'
+        patched: '2018-01-10T18:28:02.448Z'
+  'npm:qs:20140806':
+    - consolelog > grunt-contrib-watch > tiny-lr > qs:
+        patched: '2018-01-10T18:28:02.448Z'
+  'npm:uglify-js:20150824':
+    - consolelog > grunt-contrib-uglify > uglify-js:
+        patched: '2018-01-10T18:28:02.448Z'
