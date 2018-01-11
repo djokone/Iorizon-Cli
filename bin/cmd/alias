@@ -18,7 +18,7 @@ let options = {
 }
 var currentTable = new View(options, 'simple');
 var globalTable = new View(options, 'simple');
-if (!ioConf.options.global) {
+if (!io.options.global) {
   console.info('')
   console.info(color.yellow('Alias in the current directory :'))
   if (io.hasCurrentModules && io.current.isLoaded) {
@@ -40,7 +40,7 @@ if (!ioConf.options.global) {
   }
 }
 // console.log(io.globalPathFile)
-if (!ioConf.options.current) {
+if (!io.options.current) {
   console.info('')
   console.info(color.yellow('Global alias :'))
   if (io.global.isLoaded) {

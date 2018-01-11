@@ -1,6 +1,6 @@
 {
   "name": "iorizon-cli",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "description": "Command line tools to set workflow",
   "main": "bin/lib/Io.js",
   "author": "djokone@tim.potter@wanadoo.fr",
@@ -11,7 +11,7 @@
     "debug": "mocha --ui exports",
     "testing": "nyc mocha -w",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "snyk-prepare": "npm run snyk-protect"
   },
   "preferGlobal": true,
   "bin": {
@@ -36,7 +36,6 @@
     "fs": "0.0.1-security",
     "lodash": "^4.17.4",
     "pretty-print": "^1.1.0",
-    "q-io": "^1.13.4",
     "shelljs": "^0.7.8",
     "stacktrace-js": "^2.0.0",
     "write-json": "^2.0.0",
