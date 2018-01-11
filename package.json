@@ -11,7 +11,7 @@
     "debug": "mocha --ui exports",
     "testing": "nyc mocha -w",
     "snyk-protect": "snyk protect",
-    "prepare": "npm run snyk-protect"
+    "snyk-prepare": "npm run snyk-protect"
   },
   "preferGlobal": true,
   "bin": {
