@@ -4,7 +4,7 @@ var fs = require('fs');
 var utils = require('./utils');
 var shell = require("shelljs");
 const reg = require('./ioRegex')
-// require('../lib/debugger')
+require('../lib/debugger')
 // console.log(__dirname)
 class Io {
   constructor (config = {}, digest = false) {
@@ -133,7 +133,7 @@ class Io {
    */
   runSubCommand () {
     if (this.isInit) {
-      console.log(this.cmd)
+      // console.log(this.cmd)
       if (this.cmd) {
         // if (typeof this.argv.options.deep === 'undefined') {
         //   globalOptions = ['--deep', 1]

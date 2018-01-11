@@ -35,7 +35,7 @@ class ModuleLoader extends Loader {
     return res
   }
   getUrl(module, rootPath = process.cwd()) {
-    console.log(rootPath)
+    // console.log(rootPath)
     let url = false
     if (this.has(module)) {
       url = this.alias.parseUrl(this.content[module].url)
@@ -112,19 +112,22 @@ class ModuleLoader extends Loader {
       return false
       console.error('Your ' + name + ' module has no url params !')
     }
-    console.log(fileToRun)
     if (fileToRun) {
+      let child = false
       if (mode === 'spawn') {
-        let child = spawn(fileToRun, childParams, { stdio: 'inherit' })
+        let child = spawn('node ' + fileToRun, childParams, { stdio: 'inherit', shell: true })
       } else if (mode === 'spawnSync'){
-        return spawn.sync(fileToRun, childParams, { stdio: 'inherit' })
+        let child = spawn.sync(fileToRun, childParams, { stdio: 'inherit' })
       }
-      child.on('error', (err) => {
-        console.error(err)
-      })
-      child.on('data', (data) => {
-        console.log(data)
-      })
+      if (child) {
+        child.on('error', (err) => {
+          console.error(err)
+          console.error(err)
+        })
+        child.on('data', (data) => {
+          console.log(data)
+        })
+      }
     }
     
   }
