@@ -1,12 +1,12 @@
 {
   "name": "iorizon-cli",
-  "version": "1.4.7",
+  "version": "1.4.9",
   "description": "Command line tools to set workflow",
   "main": "bin/lib/Io.js",
   "author": "djokone@tim.potter@wanadoo.fr",
   "license": "ISC",
   "scripts": {
-    "test": "snyk test && nyc mocha",
+    "test": "nyc mocha",
     "report": "nyc instrument ./test ./output",
     "debug": "mocha --ui exports",
     "testing": "nyc mocha -w",

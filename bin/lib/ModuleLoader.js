@@ -1,5 +1,5 @@
 var Loader = require('./Loader');
-var spawn = require('cross-spawn');
+var {spawn} = require('child_process');
 var clone = require('lodash/clone');
 var OptionsLoader = require('./OptionsLoader')
 var path = require('path');
@@ -34,7 +34,8 @@ class ModuleLoader extends Loader {
     }
     return res
   }
-  getUrl(module, rootPath = process.argv[1]) {
+  getUrl(module, rootPath = process.cwd()) {
+    console.log(rootPath)
     let url = false
     if (this.has(module)) {
       url = this.alias.parseUrl(this.content[module].url)
@@ -42,7 +43,7 @@ class ModuleLoader extends Loader {
     
     // console.log(this.argv)
     if (this.relativeReg.test(url)) {
-      url = path.resolve(process.argv[1], '../../', url)
+      url = path.resolve(rootPath, url)
     }
     return url
   }
@@ -96,7 +97,7 @@ class ModuleLoader extends Loader {
     // console.log(res)
     return res
   }
-  run (name, argv, mode = 'spawnSync') {
+  run (name, argv, mode = 'spawn') {
     let globalOptions = []
     // console.log(argv)
     let childParams = this.buildRequest(argv)
@@ -106,18 +107,24 @@ class ModuleLoader extends Loader {
     // console.log(childParams)
     let fileToRun = false
     if (this.has(name) && this.hasUrl(name)) {
-      fileToRun = this.getUrl(name)
+      fileToRun = this.getUrl(name, argv.current.url)
     } else {
       return false
       console.error('Your ' + name + ' module has no url params !')
     }
-    // console.log(fileToRun)
+    console.log(fileToRun)
     if (fileToRun) {
       if (mode === 'spawn') {
-        return spawn(fileToRun, childParams, { stdio: 'inherit' })
+        let child = spawn(fileToRun, childParams, { stdio: 'inherit' })
       } else if (mode === 'spawnSync'){
         return spawn.sync(fileToRun, childParams, { stdio: 'inherit' })
-      }  
+      }
+      child.on('error', (err) => {
+        console.error(err)
+      })
+      child.on('data', (data) => {
+        console.log(data)
+      })
     }
     
   }

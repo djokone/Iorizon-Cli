@@ -13,7 +13,7 @@ module.exports = {
     }
   },
   path: {
-    absolute: /^([a-zA-Z]):(([\\]{1,2}|[\/])[a-zA-Z_-]*)*/,
+    absolute: /^(([a-zA-Z]):)?(([\\]{1,2}|[\/])[a-zA-Z_-]*)*/,
     relative: /^.\//
   }
 }
