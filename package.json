@@ -1,6 +1,6 @@
 {
   "name": "iorizon-cli",
-  "version": "1.4.9",
+  "version": "1.4.10",
   "description": "Command line tools to set workflow",
   "main": "bin/lib/Io.js",
   "author": "djokone@tim.potter@wanadoo.fr",
@@ -13,6 +13,7 @@
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
+  "preferGlobal": true,
   "bin": {
     "iorizon": "bin/iorizon",
     "io": "bin/iorizon"

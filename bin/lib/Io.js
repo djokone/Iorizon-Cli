@@ -9,6 +9,7 @@ const reg = require('./ioRegex')
 class Io {
   constructor (config = {}, digest = false) {
     this._process = false
+    this._current = false
     if (config.process) {
       this._process = config.process
     }
@@ -69,19 +70,13 @@ class Io {
     }
   }
   init () {
-    this.current = new IoLoader()
-    // this.current.argv = this.argv
-    // if (this.argv.current.cmd) {
-    //   for (let cmd in this.argv.current.cmd) {
-    //     this.cmd = cmd
-    //     break
-    //   }
-    // } else { this.cmd = this.argv.current.cmd }
-    // console.log(this.argv)
-    // this.cmd = this.argv.current.hasCmd ? this.argv.current.cmd.name : false
-    // this.cmd = this.argv.cmd.length > 0 ? this.argv.cmd[0].name : false
-    // console.log(this.cmd)
     this.isInit = true
+  }
+  get current () {
+    if (this._current === false) {
+      this._current = new IoLoader()
+    }
+    return this._current
   }
   get hasCurrentModules () {
     return typeof this.current.content.modules !== "undefined"
@@ -114,7 +109,7 @@ class Io {
   _syncOptions () {
     let res = {}
     let current = this.argv.current
-    // console.log(cu)
+    // console.log(current)
     current.loader._options.each((v, k) => {
       let opt = current.loader._options.get(v)
       res[opt.meta.option.name] = opt.value
@@ -133,7 +128,7 @@ class Io {
    */
   runSubCommand () {
     if (this.isInit) {
-      console.log(this.cmd)
+      // console.log(this.cmd)
       if (this.cmd) {
         // if (typeof this.argv.options.deep === 'undefined') {
         //   globalOptions = ['--deep', 1]
@@ -188,7 +183,6 @@ class Io {
    * Make a proper deep object
    ********************************/
   parseArgv (argvs = this.process.argv) {
-    // console.log(argvs)
     let parsed = {}
     parsed.process = []
     parsed.all = argvs.slice(1)
@@ -207,29 +201,30 @@ class Io {
         process: -1
       }
     }
-    let currentProcess = 0
+    let currentProcess = 0                                          
     // Each argv throw the spwan node script
     for (let argv of argvs) {
-      // console.log(argv)
       meta.current.argv = argv
       meta.current.index = index
       let data = {}
       // If it is a path, so it's a process
-      if (reg.path.absolute.test(argv)) {
+      if (path.isAbsolute(argv)) {
         meta.options = {}
         meta.cmd = false
         meta.process = {}
         meta.cmdProcessCount = 0
         meta.current.process++
         let ioPath = this.pathToIoFile(argv)
-        // console.log(ioPath)
         meta.current.ioPath = ioPath
         let loader = false
+        if (index === 1) {
+          // console.log('cuuuurrrreeennnnnt')
+          ioPath = this.pathToIoFile(this.process.mainModule.filename)
+        }
         if (ioPath !== false) {
-          // ioPath = path.normalize(path.resolve(ioPath, this.ioFile))
-          // console.log(ioPath)
           loader = new IoLoader(ioPath)
         }
+        // console.log(io)
         data = {
           process: argv,
           loader,
@@ -242,7 +237,6 @@ class Io {
         meta.process.global = false
         if (index === 1) {
           meta.process.key = 'current'
-          data.loader = this.current
           parsed.current = data
           parsed.childs = []
         } else if (index > 1) {
@@ -266,7 +260,6 @@ class Io {
 
       if (!hasOptionsHandled && reg.cmd.test(argv)) {
         meta.cmdProcessCount++
-        // console.log(meta)
         if (meta.cmdProcessCount === 1 && !meta.process.global) {
           cmdKey = 'currentCmd'
         }
@@ -281,8 +274,6 @@ class Io {
         target = parsed[meta.process.key]
       }
 
-      // console.log(reg.cmd.test(argv))
-      // if (meta.cmdProcessCount) {}
       // if it's a options value
       if (
         hasOptionsHandled
@@ -325,17 +316,14 @@ class Io {
       }
       // If it's a option @exemple --deep or -d
       if (reg.option.normal.test(argv) || reg.option.shortcut.test(argv)) {
+        // console.log(process)
         let targetOpt
         if (meta.cmd) {
-          // console.log(cmdKey)
           targetOpt = target[cmdKey][meta.cmd.key]._options
-          // console.log(target)
         } else {
           targetOpt = target.options
         }
         meta.options = {}
-        // console.log(meta)
-        // console.log(target)
         let opt = target.loader._options.get(argv)
         if (target.loader._options && opt) {
           meta.options = opt
@@ -355,7 +343,7 @@ class Io {
       prev = {meta, data}
       index++
     }
-    // console.log(parsed)
+
     if (typeof parsed.current !== 'undefined') {
       this.module = parsed.current.loader
       this.hasModule = true
