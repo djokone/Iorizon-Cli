@@ -9,6 +9,7 @@ var color = require('chalk')
 
 
 let io = new Io()
+
 let ioConf = io.argv.global
 let options = {
   head: ["Alias", "Path to alias", "Has config", "Path Exist"],
@@ -17,7 +18,7 @@ let options = {
 }
 var currentTable = new View(options, 'simple');
 var globalTable = new View(options, 'simple');
-// console.log(process.argv)
+// console.log(ioConf)
 if (!ioConf.options.global) {
   console.info('')
   console.info(color.yellow('Alias in the current directory :'))

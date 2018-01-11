@@ -52,8 +52,16 @@ class Io {
     this.global.argv = this.argv
   }
   get cmd () {
-    if (typeof this.argv.current !== 'undefined') {
+    if (typeof this.argv.current !== 'undefined' && Array.isArray(this.argv.current.cmd)) {
+      console.log(this.argv)
       for (let cmd in this.argv.current.cmd) {
+        return cmd
+        break
+      }
+      return false
+    } else if (Array.isArray(this.argv.cmd)) {
+      // console.log(this.argv.cmd)
+      for (let cmd of this.argv.cmd) {
         return cmd
         break
       }
@@ -125,6 +133,7 @@ class Io {
    */
   runSubCommand () {
     if (this.isInit) {
+      console.log(this.cmd)
       if (this.cmd) {
         // if (typeof this.argv.options.deep === 'undefined') {
         //   globalOptions = ['--deep', 1]
@@ -143,11 +152,10 @@ class Io {
         } else {
           console.warn('This cmd : ' + this.cmd + ', doesn\'t exist')
         }
-
       }
     } else {
       console.error('You have to call init() function before running subcommands !')
-    }   
+    }  
   }
   /**
    * Parse node js process.argv array to an object
@@ -234,6 +242,7 @@ class Io {
         meta.process.global = false
         if (index === 1) {
           meta.process.key = 'current'
+          data.loader = this.current
           parsed.current = data
           parsed.childs = []
         } else if (index > 1) {
