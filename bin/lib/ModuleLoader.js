@@ -99,15 +99,12 @@ class ModuleLoader extends Loader {
   }
   run (name, argv, mode = 'spawn') {
     let globalOptions = []
-    // console.log(argv)
     let childParams = this.buildRequest(argv)
-    // console.log(childParams)
-    // let childParams = clone(this.argv.all)
-    // childParams.splice(this.argv.process.all.length - 1, 0, ...globalOptions)
-    // console.log(childParams)
+
     let fileToRun = false
+
     if (this.has(name) && this.hasUrl(name)) {
-      fileToRun = this.getUrl(name, argv.current.url)
+      fileToRun = this.getUrl(name, argv.current.loader.url)
     } else {
       return false
       console.error('Your ' + name + ' module has no url params !')

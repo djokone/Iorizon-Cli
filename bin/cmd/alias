@@ -18,7 +18,6 @@ let options = {
 }
 var currentTable = new View(options, 'simple');
 var globalTable = new View(options, 'simple');
-// console.log(ioConf)
 if (!ioConf.options.global) {
   console.info('')
   console.info(color.yellow('Alias in the current directory :'))
