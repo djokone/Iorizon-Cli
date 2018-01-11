@@ -6,7 +6,7 @@
   "author": "djokone@tim.potter@wanadoo.fr",
   "license": "ISC",
   "scripts": {
-    "test": "snyk test && nyc mocha",
+    "test": "nyc mocha",
     "report": "nyc instrument ./test ./output",
     "debug": "mocha --ui exports",
     "testing": "nyc mocha -w",

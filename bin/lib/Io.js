@@ -4,7 +4,7 @@ var fs = require('fs');
 var utils = require('./utils');
 var shell = require("shelljs");
 const reg = require('./ioRegex')
-require('../lib/debugger')
+// require('../lib/debugger')
 // console.log(__dirname)
 class Io {
   constructor (config = {}, digest = false) {
@@ -53,13 +53,15 @@ class Io {
   }
   get cmd () {
     if (typeof this.argv.current !== 'undefined' && Array.isArray(this.argv.current.cmd)) {
+      console.log(this.argv)
       for (let cmd in this.argv.current.cmd) {
         return cmd
         break
       }
       return false
     } else if (Array.isArray(this.argv.cmd)) {
-      for (let cmd in this.argv.cmd) {
+      // console.log(this.argv.cmd)
+      for (let cmd of this.argv.cmd) {
         return cmd
         break
       }
@@ -131,6 +133,7 @@ class Io {
    */
   runSubCommand () {
     if (this.isInit) {
+      console.log(this.cmd)
       if (this.cmd) {
         // if (typeof this.argv.options.deep === 'undefined') {
         //   globalOptions = ['--deep', 1]
@@ -239,6 +242,7 @@ class Io {
         meta.process.global = false
         if (index === 1) {
           meta.process.key = 'current'
+          data.loader = this.current
           parsed.current = data
           parsed.childs = []
         } else if (index > 1) {
@@ -356,7 +360,6 @@ class Io {
       this.module = parsed.current.loader
       this.hasModule = true
     }
-    console.log(parsed)
     return parsed
   }
   get parentCmd () {
