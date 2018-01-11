@@ -13,6 +13,7 @@
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
+  "preferGlobal": true,
   "bin": {
     "iorizon": "bin/iorizon",
     "io": "bin/iorizon"
