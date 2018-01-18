@@ -7,10 +7,11 @@
     "imperial": "@cakephp3/Imperial",
     "npm": "@factory/NPM",
     "io": "@npm/Iorizon",
-    "ioCore": "@npm/Scripts/Iorizon-cli",
+    "ioCore": "@npm/Cli/Iorizon-cli",
     "workflow": "@factory/workflow",
     "builds": "@npm/Builds"
   },
+  "main": "./bin/iorizon",
   "options": {
     "--deep|-d": ["number"],
     "--test|-t": ["number"],
@@ -20,7 +21,12 @@
   "workflow": "@workflow/imperial",
   "modules": {
     "init": {
-      "url": "./bin/cmd/init"
+      "url": "./bin/cmd/init",
+      "options": {
+        "global|-g": {
+          "extend": true
+        }
+      }
     },
     "alias": {
       "url": "./bin/cmd/alias"
