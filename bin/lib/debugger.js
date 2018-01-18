@@ -14,22 +14,23 @@ let activeProxy = function (cible = console.log) {
   }
   cible = new Proxy (cible, handler)
 }
+let debug = function (msg) {
+  console.info('')
+  console.info(msg)
+  let trace = StackTrace.getSync()
+  let frame = trace[1]
+  console.info('')
+  console.info('in ' + frame.getFileName() + ' line ' + frame.getLineNumber() + ', col ' + frame.getColumnNumber());
+  console.info('Called in ' + frame.getFunctionName() + ' function.')
+  console.info('')
+}
 
 module.exports = {
   trace: function (msg) {
     console.trace(msg)
   },
   activeProxy,
-  debug: function (msg) {
-    console.info('')
-    console.info('->', ...listArg)
-    let trace = StackTrace.getSync()
-    let frame = trace[1]
-    console.info('')
-    console.info('in ' + frame.getFileName() + ' line ' + frame.getLineNumber() + ', col ' + frame.getColumnNumber());
-    console.info('Called in ' + frame.getFunctionName() + ' function.')
-    console.info('')
-  }
+  debug
 }
 // module.exports.debug = function (msg){
 //   let logLineDetails = ((new Error().stack).split("at ")[3]).trim();

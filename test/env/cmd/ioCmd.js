@@ -24,7 +24,7 @@ let ioProcess = [
   {
     cmd: 'io -g alias',
     cwd: env.ioCwd,
-    processes: [
+    subProcess: [
       {
         current: 'io',
         argv: IoPA, //  Io Process Argv

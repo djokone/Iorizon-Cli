@@ -8,27 +8,29 @@ var expect = chai.expect
 var should = chai.should
 let { env, cmds } = require('./env/process')
 let { forEach } = require('../bin/lib/utils')
-let debug = require('../bin/lib/debugger')
+let debug = require('../bin/lib/debugger').debug
 
 let IoCoreConf = require('../io.json') 
-console.log(cmds)
+
 describe('Io class', () => {
   let InitIoPA 
   let allCmdInit = []
   describe('#constructor ()', () => {
+    // debug(cmds)
     // Each cmd argv run a processus
     forEach(cmds, (processus) => {
       let desc = 'During "' + processus.cmd + '" cmd'
       if (processus.cwd) {
         desc += ' in ' + processus.cwd.path + ' current directory.'
       }
-      console.log(processus.cmd)
+      // debug(processus.cmd)
       describe(desc, () => {
         // Each processus got's 
+        // debug(processus.subProcess)
         forEach(processus.subProcess, (sp, index) => {
-          console.log(index)
+          // debug(index)
           describe('In ' + sp.current + ' subprocess',() => {
-            // console.log(sp.argv)
+            // debug(sp.argv)
             let initSp
             beforeEach(() => {
               let options = { argv: sp.argv }
@@ -41,7 +43,7 @@ describe('Io class', () => {
                 expect(initSp.cmd).equal(sp.current)
               })
             }
-            // console.log(initSp.processArgv)
+            // debug(initSp.processArgv)
             it('Should have right argvs', function () {
               expect(initSp.processArgv).equal(sp.argv)
             })
@@ -59,7 +61,7 @@ describe('Io class', () => {
               // expect(initSp.current)
             })
             it('Should load the engine process', function () {
-              expect(initSp.engine, 'Need to create the engine property in class').to.not.be.undefined
+              expect(initSp.engine, 'Need to create the engine property in Io class').to.not.be.undefined
               expect(initSp.engine.isLoaded).to.be.true
             }) 
             it('Should init all the ioLoader', function () {
@@ -77,7 +79,7 @@ describe('Io class', () => {
     })
     describe('In the io process', () => { 
       InitIoPA = new Io({ 
-        argv: cmds[0].processes[0].argv 
+        argv: cmds[0].subProcess[0].argv 
       }) 
       let IoCoreOptions = { 
         deep: 0, 
@@ -89,7 +91,7 @@ describe('Io class', () => {
   }) 
   describe('#parseArgv()', () => {
     let init = new Io({
-      argv: cmds[0].processes[0].argv 
+      argv: cmds[0].subProcess[0].argv 
     })
     // it('Should ')
   })
