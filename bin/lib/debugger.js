@@ -1,7 +1,26 @@
 var StackTrace = require('stacktrace-js')
+let activeProxy = function (cible = console.log) {
+  let handler = {
+    apply (cible, thisArg, listArg) {
+      console.info('')
+      console.info('->', ...listArg)
+      let trace = StackTrace.getSync()
+      let frame = trace[1]
+      console.info('')
+      console.info('in ' + frame.getFileName() + ' line ' + frame.getLineNumber() + ', col ' + frame.getColumnNumber());
+      console.info('Called in ' + frame.getFunctionName() + ' function.')
+      console.info('')
+    }
+  }
+  cible = new Proxy (cible, handler)
+}
 
-let handler = {
-  apply (cible, thisArg, listArg) {
+module.exports = {
+  trace: function (msg) {
+    console.trace(msg)
+  },
+  activeProxy,
+  debug: function (msg) {
     console.info('')
     console.info('->', ...listArg)
     let trace = StackTrace.getSync()
@@ -11,11 +30,6 @@ let handler = {
     console.info('Called in ' + frame.getFunctionName() + ' function.')
     console.info('')
   }
-}
-console.log = new Proxy (console.log, handler)
-module.exports = function (msg) {
-  // console.log(msg)
-  console.trace(msg)
 }
 // module.exports.debug = function (msg){
 //   let logLineDetails = ((new Error().stack).split("at ")[3]).trim();

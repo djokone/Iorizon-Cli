@@ -8,10 +8,10 @@ let escape = function escapeRegExp(text) {
 
 let forEach = function (iterator, callback) {
   if (Array.isArray(iterator)) {
+    let i = 0
     for (let iterate of iterator) {
-      let data = iterator[iterate]
-      let key = iterate
-      callback(data, key)
+      callback(iterate, i)
+      i++
     }  
   } else {
     for (let iterate in iterator) {
