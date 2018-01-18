@@ -5,26 +5,76 @@ var path = require('path')
 let { resolve, parse, normalize } = path 
 let { existsSync } = require('fs') 
 var expect = chai.expect 
-var should = chai.should 
-let { env, cmds } = require('./env/process') 
-let { forEach } = require('../bin/lib/utils') 
- 
+var should = chai.should
+let { env, cmds } = require('./env/process')
+let { forEach } = require('../bin/lib/utils')
+let debug = require('../bin/lib/debugger')
+
 let IoCoreConf = require('../io.json') 
- 
-let nodeProcess = process.argv0 
-let ioProcess = normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/iorizon')) 
-let aliasProcess = normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/cmd/alias')) 
- 
-describe('Io class', () => { 
+console.log(cmds)
+describe('Io class', () => {
   let InitIoPA 
-  describe('Environement', () => { 
-    forEach(env, (v, k) => { 
-      it('Should have ' + v.name + ' path : ' + v.path, () => { 
-        expect(existsSync(v.path)).to.be.true 
-      }) 
-    }) 
-  }) 
-  describe('#constructor ()', () => { 
+  let allCmdInit = []
+  describe('#constructor ()', () => {
+    // Each cmd argv run a processus
+    forEach(cmds, (processus) => {
+      let desc = 'During "' + processus.cmd + '" cmd'
+      if (processus.cwd) {
+        desc += ' in ' + processus.cwd.path + ' current directory.'
+      }
+      console.log(processus.cmd)
+      describe(desc, () => {
+        // Each processus got's 
+        forEach(processus.subProcess, (sp, index) => {
+          console.log(index)
+          describe('In ' + sp.current + ' subprocess',() => {
+            // console.log(sp.argv)
+            let initSp
+            beforeEach(() => {
+              let options = { argv: sp.argv }
+              if (processus.cwd)
+                options.cwd = processus.cwd.path
+              initSp = new Io(options)
+            })
+            if (index !== 0) {
+              it('Should have ' + sp.current + ' cmd', function () {
+                expect(initSp.cmd).equal(sp.current)
+              })
+            }
+            // console.log(initSp.processArgv)
+            it('Should have right argvs', function () {
+              expect(initSp.processArgv).equal(sp.argv)
+            })
+            // if (sp.childs) {
+            //   it('Should have childs process', () => {
+            //     expect(sp.childs)
+            //   })
+            // }
+            it('Should load current directory io.json', function () {
+              expect(initSp.global.isLoaded).to.be.true 
+              if (processus.cwd) {
+                expect(initSp.current.url, 'Wrong current url').equal(processus.cwd.path)
+                // expect(init.cmd)
+              }
+              // expect(initSp.current)
+            })
+            it('Should load the engine process', function () {
+              expect(initSp.engine, 'Need to create the engine property in class').to.not.be.undefined
+              expect(initSp.engine.isLoaded).to.be.true
+            }) 
+            it('Should init all the ioLoader', function () {
+              expect(initSp.current, 'Don\'t have current directory loader').to.not.be.false
+              expect(initSp.current.isLoaded).to.be.true 
+            }) 
+            if (sp.expected && sp.expected.options) {
+              it('Should have the right options', function () {
+                expect(initSp.options).to.deep.equal(sp.expected.options) 
+              }) 
+            }
+          })
+        })
+      })
+    })
     describe('In the io process', () => { 
       InitIoPA = new Io({ 
         argv: cmds[0].processes[0].argv 
@@ -35,27 +85,14 @@ describe('Io class', () => {
         global: true, 
         current: false 
       } 
-      // console.log(InitIoPA) 
-      it('Should have a cmd propertie', function () { 
-        expect(InitIoPA.cmd).equal('alias') 
-      }) 
- 
-      it('Should parse argv', function () { 
-        expect(InitIoPA.argv.current.options.global).to.deep.equal({value: true, key: '-g'}) 
-      }) 
-      it('Should find Io path file', () => { 
-        // expect('') 
-      }) 
-      it('Should init all the ioLoader', function () { 
-        expect(InitIoPA.global.isLoaded).to.be.true 
-        expect(InitIoPA.current.isLoaded).to.be.true 
-      }) 
-      it('Should load right options', function () { 
-        expect(InitIoPA.options).to.deep.equal(IoCoreOptions) 
-      }) 
     }) 
   }) 
- 
+  describe('#parseArgv()', () => {
+    let init = new Io({
+      argv: cmds[0].processes[0].argv 
+    })
+    // it('Should ')
+  })
   // describe('Should find path to io file', () => { 
   //   init 
   //   it('Should') 
