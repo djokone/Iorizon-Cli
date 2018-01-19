@@ -1,5 +1,14 @@
-let { resolve, parse, normalize } = require('path')
-
+let { resolve, parse, normalize, join } = require('path')
+var os = require('os')
+const platform = os.platform()
+let nodeModulesGlobal
+console.log(platform === 'darwin')
+if (platform === 'darwin') {
+  nodeModulesGlobal = 'usr/local/lib/'
+} else {
+  nodeModulesGlobal = process.env.npm_config_prefix
+}
+console.log(normalize(join(nodeModulesGlobal, '/node_modules/iorizon-cli/bin/iorizon')))
 let env = {
   ioCwd: {
     name: 'Iorizon-cli Folder Current Directory',
@@ -11,11 +20,11 @@ let env = {
   },
   ioProcess: {
     name: 'io',
-    path: normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/iorizon'))
+    path: normalize(join(nodeModulesGlobal, '/node_modules/iorizon-cli/bin/iorizon'))
   },
   aliasProcess: {
     name: 'alias',
-    path: normalize(resolve(process.env.npm_config_prefix, 'node_modules/iorizon-cli/bin/cmd/alias'))
+    path: normalize(join(nodeModulesGlobal, '/node_modules/iorizon-cli/bin/cmd/alias'))
   }
 }
 
