@@ -2,6 +2,7 @@
   "name": "iorizon-core",
   "alias": {
     "sites": "e:/sites",
+    "npmHub": "https://registry.npmjs.org/",
     "factory": "@sites/myModules/",
     "cakephp3": "@sites/Cakephp3",
     "imperial": "@cakephp3/Imperial",
@@ -10,6 +11,9 @@
     "ioCore": "@npm/Cli/Iorizon-cli",
     "workflow": "@factory/workflow",
     "builds": "@npm/Builds"
+  },
+  "interface": {
+    "engine": "@npmHub/iorizon-interface"
   },
   "main": "./bin/iorizon",
   "options": {
