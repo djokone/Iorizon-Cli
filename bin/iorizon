@@ -44,9 +44,9 @@ if (!io.cmd) {
   if (!io.options.current || (io.options.global && io.options.current)) {
     console.info('')
     console.info(color.yellow('All the global commands :'))
-    if (io.global.isLoaded) {
-      io.global.modules.each((v, k) => {
-        globalModules.push([v, io.global.alias.parseUrl(k.url)])
+    if (io.engine.isLoaded) {
+      io.engine.modules.each((v, k) => {
+        globalModules.push([v, io.engine.alias.parseUrl(k.url)])
       })
       console.info(globalModules.toString())
     } else {

@@ -13,10 +13,9 @@ let debug = require('../bin/lib/debugger').debug
 let IoCoreConf = require('../io.json') 
 
 describe('Io class', () => {
-  let InitIoPA 
+  let InitIoPA
   let allCmdInit = []
   describe('#constructor ()', () => {
-    // debug(cmds)
     // Each cmd argv run a processus
     forEach(cmds, (processus) => {
       let desc = 'During "' + processus.cmd + '" cmd'
@@ -28,9 +27,7 @@ describe('Io class', () => {
         // Each processus got's 
         // debug(processus.subProcess)
         forEach(processus.subProcess, (sp, index) => {
-          // debug(index)
           describe('In ' + sp.current + ' subprocess',() => {
-            // debug(sp.argv)
             let initSp
             beforeEach(() => {
               let options = { argv: sp.argv }
@@ -56,9 +53,7 @@ describe('Io class', () => {
               expect(initSp.global.isLoaded).to.be.true 
               if (processus.cwd) {
                 expect(initSp.current.url, 'Wrong current url').equal(processus.cwd.path)
-                // expect(init.cmd)
               }
-              // expect(initSp.current)
             })
             it('Should load the engine process', function () {
               expect(initSp.engine, 'Need to create the engine property in Io class').to.not.be.undefined
@@ -77,23 +72,28 @@ describe('Io class', () => {
         })
       })
     })
+
     describe('In the io process', () => { 
-      InitIoPA = new Io({ 
-        argv: cmds[0].subProcess[0].argv 
-      }) 
-      let IoCoreOptions = { 
-        deep: 0, 
-        test: 0, 
-        global: true, 
-        current: false 
-      } 
+      InitIoPA = new Io({
+        argv: cmds[0].subProcess[0].argv
+      })
+      let IoCoreOptions = {
+        deep: 0,
+        test: 0,
+        global: true,
+        current: false
+      }
     }) 
-  }) 
-  describe('#parseArgv()', () => {
-    let init = new Io({
-      argv: cmds[0].subProcess[0].argv 
+  })
+
+  describe.only('#parseArgv()', () => {
+    console.log('--------------------------------------------------------------------------------------------------------------------')
+    let ioCmd = cmds[0].subProcess[0].argv 
+    let io = new Io({
+      argv: ioCmd
     })
-    // it('Should ')
+    io.parseArgv(ioCmd)
+    // debug(cmds[0].subProcess[0])
   })
   // describe('Should find path to io file', () => { 
   //   init 

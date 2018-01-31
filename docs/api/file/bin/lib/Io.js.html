@@ -1,10 +1,46 @@
-var IoLoader = require('./IoLoader')
-var path = require('path');
-var fs = require('fs');
-var utils = require('./utils');
-var shell = require("shelljs");
-const reg = require('./ioRegex')
-let debug = require('../lib/debugger').debug
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">bin/lib/Io.js | iorizon-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Command line tools to set workflow"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="iorizon-cli"><meta property="twitter:description" content="Command line tools to set workflow"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">bin/lib/Io.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var IoLoader = require(&apos;./IoLoader&apos;)
+var path = require(&apos;path&apos;);
+var fs = require(&apos;fs&apos;);
+var utils = require(&apos;./utils&apos;);
+var shell = require(&quot;shelljs&quot;);
+const reg = require(&apos;./ioRegex&apos;)
+let debug = require(&apos;../lib/debugger&apos;).debug
 
 
 class Io {
@@ -20,11 +56,11 @@ class Io {
     if (config.process) {
       this._process = config.process
     }
-    this.globalFolder = 'iorizon-cli'
-    this.enginePath = 'iorizon-cli/bin/iorizon'
-    this.enginePath = 'iorizon-cli/bin/iorizon'
-    this.ioFile = 'io.json'
-    this.commandPriority = ['current', 'global']
+    this.globalFolder = &apos;iorizon-cli&apos;
+    this.enginePath = &apos;iorizon-cli/bin/iorizon&apos;
+    this.enginePath = &apos;iorizon-cli/bin/iorizon&apos;
+    this.ioFile = &apos;io.json&apos;
+    this.commandPriority = [&apos;current&apos;, &apos;global&apos;]
     this._enginePath = false
     this._argv = false
     if (config.argv) {
@@ -42,7 +78,7 @@ class Io {
    * @todo All to do
    */
   ioRequire () {
-    // debug('io Require')
+    // debug(&apos;io Require&apos;)
     require = new Proxy (require, {
       apply: function (target, thisArg, argument) {
         debug(target)
@@ -54,7 +90,7 @@ class Io {
 
   /**
    * Get the engine used for your command line tool, will be the parent process. If you want to
-   * to create you're own follow the contribution guide
+   * to create you&apos;re own follow the contribution guide
    * @return {[type]} [description]
    */
   get engine () {
@@ -62,7 +98,7 @@ class Io {
     if (!this._engine) {
       this._engine = new IoLoader(this.pathToIoFile(this.globalPathFile))
     }
-    if (this.inModule && this.modulePath) {
+    if (this.inModule &amp;&amp; this.modulePath) {
       this.module = this.argv.current.loader
       // this.module.argv = this.argv
       this.hasModule = true
@@ -83,11 +119,11 @@ class Io {
   }
 
   set globalPathFile (value) {
-    console.warn("cannot set this path")
+    console.warn(&quot;cannot set this path&quot;)
     return false
   }
   get cmd () {
-    if (typeof this.argv.current !== 'undefined' && Array.isArray(this.argv.current.cmd)) {
+    if (typeof this.argv.current !== &apos;undefined&apos; &amp;&amp; Array.isArray(this.argv.current.cmd)) {
       debug(this.argv)
       for (let cmd in this.argv.current.cmd) {
         return cmd
@@ -113,7 +149,7 @@ class Io {
     return this._current
   }
   get hasCurrentModules () {
-    return typeof this.current.content.modules !== "undefined"
+    return typeof this.current.content.modules !== &quot;undefined&quot;
   }
 
   get process () {
@@ -140,7 +176,7 @@ class Io {
 
   get options () {
     let res = this._syncOptions()
-    if (this.hasModule && this.current.isLoaded) {
+    if (this.hasModule &amp;&amp; this.current.isLoaded) {
       let currentRes = this.current.modules.getModuleOptions(this.parentCmd[0])
       // debug(currentRes)
       res = Object.assign({}, res, currentRes)
@@ -151,7 +187,7 @@ class Io {
   _syncOptions () {
     let res = {}
     let current = this.argv.current
-    current.loader._options.each((v, k) => {
+    current.loader._options.each((v, k) =&gt; {
       let opt = current.loader._options.get(v)
       res[opt.meta.option.name] = opt.value
     })
@@ -174,18 +210,18 @@ class Io {
         // debug(this.current.modules.has(this.cmd))
         // debug(this)
         // debug(this.hasModule)
-        if ((this.hasModule) && this.inModule && this.module.isLoaded && this.module.modules.has(this.cmd)) {
+        if ((this.hasModule) &amp;&amp; this.inModule &amp;&amp; this.module.isLoaded &amp;&amp; this.module.modules.has(this.cmd)) {
           this.module.modules.run(this.cmd, this.argv)
-        } else if (this.hasCurrentModules && this.current.isLoaded && this.current.modules.has(this.cmd)) {
+        } else if (this.hasCurrentModules &amp;&amp; this.current.isLoaded &amp;&amp; this.current.modules.has(this.cmd)) {
           this.current.modules.run(this.cmd, this.argv)
-        } else if (this.engine.isLoaded && this.engine.modules.has(this.cmd)) {
+        } else if (this.engine.isLoaded &amp;&amp; this.engine.modules.has(this.cmd)) {
           this.engine.modules.run(this.cmd, this.argv)
         } else {
-          console.warn('This cmd : ' + this.cmd + ', doesn\'t exist')
+          console.warn(&apos;This cmd : &apos; + this.cmd + &apos;, doesn\&apos;t exist&apos;)
         }
       }
     } else {
-      console.error('You have to call init() function before running subcommands !')
+      console.error(&apos;You have to call init() function before running subcommands !&apos;)
     }  
   }
   /**
@@ -198,19 +234,19 @@ class Io {
    * $ io --global build --silent save
    * 
    * e:\sites\Projets\ImperialInternational\imperial-cakephp3\io.json
-   * "modules": {
-   *    "build": {
-   *      "url": "e:\sites\factory\buildManager"
+   * &quot;modules&quot;: {
+   *    &quot;build&quot;: {
+   *      &quot;url&quot;: &quot;e:\sites\factory\buildManager&quot;
    *    }
    * }
    * 
    * e:\sites\factory\buildManager\io.json
-   * "options": {
-   *   "--silent": [true]
+   * &quot;options&quot;: {
+   *   &quot;--silent&quot;: [true]
    * }
-   * "modules": {
-   *   "save": {
-   *     "url": "./bin/save"
+   * &quot;modules&quot;: {
+   *   &quot;save&quot;: {
+   *     &quot;url&quot;: &quot;./bin/save&quot;
    *    }
    * }
    * last spawn 
@@ -221,12 +257,9 @@ class Io {
   parseArgv (argvs = this.process.argv) {
     let parsed = {}
     parsed.process = []
-    // console.log(argvs)
-    if (!Array.isArray(argvs)) {
-      throw new Error('Argvs argument need to be an array !')
-    }
+    parsed.all = argvs.slice(1)
     // reg.path.absolute.test(argvs[2]) ? parsed.process.io = argvs[2] : parsed.process.io = argvs[1]
-    parsed.process.all = argvs.slice(1)
+    parsed.process.all = []
     parsed.process.argvs = argvs
     parsed.cmd = []
     parsed.options = {}
@@ -242,15 +275,16 @@ class Io {
       }
     }
     let currentProcess = 0
+    debug(argvs)
     // Each argv throw the spwan node script
-    for (let argv of parsed.process.all) {
+    for (let argv of argvs) {
       debug(argv)
-      debug('before')
+      debug(&apos;before&apos;)
       debug(meta)
       meta.current.argv = argv
       meta.current.index = index
       let data = {}
-      // If it is a path, so it's a process
+      // If it is a path, so it&apos;s a process
       if (path.isAbsolute(argv)) {
         meta.options = {}
         meta.cmd = false
@@ -271,54 +305,58 @@ class Io {
           loader,
           cmd: false,
           options: {},
+          // currentCmd: {},
           cmdLength: meta.cmdProcessCount,
           hasCmd: false
         }
-        meta.process.engine = false
-        if (this.isEngineProcess(argv)) {
-          meta.process.engine = true
-          meta.process.type = 'process'
-          meta.current.type = 'process'
-          meta.process.value = argv
-          meta.process.key = 'engine'
-          parsed.engine = data
-          parsed.engine.options = {}
-        }
+        meta.process.global = false
         if (index === 1) {
-          meta.process.key = 'current'
+          meta.process.key = &apos;current&apos;
           parsed.current = data
           parsed.childs = []
-        } else if (index > 1) {
-          meta.process.key = 'childs'
+        } else if (index &gt; 1) {
+          meta.process.key = &apos;childs&apos;
           parsed.childs.push(data)
           meta.process.indexKey = parsed.childs.length - 1
         }
-
+        debug(argv)
+        debug(this.isEngineProcess(argv))
+        if (this.isEngineProcess(argv)) {
+          meta.process.global = true
+          meta.process.type = &apos;process&apos;
+          meta.current.type = &apos;process&apos;
+          meta.process.value = argv
+          meta.process.key = &apos;global&apos;
+          parsed.global = data
+          parsed.global.options = {}
+        }
       }
-      let hasOptionsHandled = typeof meta.options !== 'undefined' && 
-        typeof meta.options.handle !== 'undefined' && 
-        meta.options.handle > 0
-      let cmdKey = 'cmd'
+      let hasOptionsHandled = typeof meta.options !== &apos;undefined&apos; &amp;&amp; 
+        typeof meta.options.handle !== &apos;undefined&apos; &amp;&amp; 
+        meta.options.handle &gt; 0
+      let cmdKey = &apos;cmd&apos;
 
-      if (!hasOptionsHandled && reg.cmd.test(argv)) {
+      if (!hasOptionsHandled &amp;&amp; reg.cmd.test(argv)) {
         meta.cmdProcessCount++
-        // if (meta.cmdProcessCount === 1 && !meta.process.engine) {
-        //   cmdKey = 'currentCmd'
+        // if (meta.cmdProcessCount === 1 &amp;&amp; !meta.process.global) {
+        //   cmdKey = &apos;currentCmd&apos;
         // }
       }
       let target
       // Handle the reference to manipulate it in next conditions
-      if (meta.process.engine) {
-        target = parsed.engine
-      } else if (meta.process.key === 'childs') {
+      if (meta.process.global) {
+        target = parsed.global
+      } else if (meta.process.key === &apos;childs&apos;) {
         target = parsed[meta.process.key][meta.process.indexKey]
       } else {
         target = parsed[meta.process.key]
       }
 
-      // if it's a options value
-      if (hasOptionsHandled) {
-        meta.current.type = 'optVal'
+      // if it&apos;s a options value
+      if (
+        hasOptionsHandled
+        ) {
+        meta.current.type = &apos;optVal&apos;
         let targetOpt
         if (meta.cmd) {
           targetOpt = target[cmdKey][meta.cmd.key].options[meta.options.meta.option.name].value
@@ -331,15 +369,15 @@ class Io {
           targetOpt[meta.options.meta.argCount - meta.options.handle] = argv
         }
         meta.options.handle--
-        if (meta.options.handle < 1) {
+        if (meta.options.handle &lt; 1) {
           meta.cmd = false
         }
       }
-      // if it's a command to handle
+      // if it&apos;s a command to handle
       else if (reg.cmd.test(argv)) { 
         meta.cmd = {}
-        meta.current.type = 'cmd'
-        meta.cmd.type = 'cmd'
+        meta.current.type = &apos;cmd&apos;
+        meta.cmd.type = &apos;cmd&apos;
         meta.cmd.key = argv
         // parsed[meta.process.key].cmd[meta.cmd.key].arg.push(argv)
         let cmd = {
@@ -348,8 +386,8 @@ class Io {
           arg: []
         }
         parsed.cmd.push(argv)
-        // debug(cmdKey)
-        if (typeof target.cmd === 'boolean') {
+        debug(cmdKey)
+        if (typeof target.cmd === &apos;boolean&apos;) {
           target[cmdKey] = {}
         }
         target[cmdKey][argv] = cmd
@@ -357,11 +395,15 @@ class Io {
         meta.cmdCount++
         target.cmdLength = meta.cmdCount
       }
-      // If it's a option @exemple --deep or -d
+      // If it&apos;s a option @exemple --deep or -d
       if (reg.option.normal.test(argv) || reg.option.shortcut.test(argv)) {
         // debug(meta)
-        meta.current.type = 'opt'
+        meta.current.type = &apos;opt&apos;
         let targetOpt
+        debug(meta)
+        debug(target)
+        debug(cmdKey)
+        debug(meta.cmd.key)
         if (meta.cmd) {
           targetOpt = target[cmdKey][meta.cmd.key].options
         } else {
@@ -369,25 +411,32 @@ class Io {
         }
         meta.options = {}
         let opt = target.loader._options.get(argv)
-        if (target.loader._options && opt) {
+        if (target.loader._options &amp;&amp; opt) {
           meta.options = opt
           let option = {
             value: opt.value,
             key: opt.meta.option.call
           }
           targetOpt[opt.meta.option.name] = option
-          if (opt.meta.value.type === 'boolean') {
+          if (opt.meta.value.type === &apos;boolean&apos;) {
             targetOpt[opt.meta.option.name].value = !opt.value
           }
           meta.options.handle = opt.meta.argCount
         } else {
-          throw new Error('Io \'' + argv + '\' option is missing in ' + target.loader.name + ' configuration at location: ' + path.normalize(path.resolve(target.process, target.loader.ioFileName)))
+          throw new Error(&apos;Io \&apos;&apos; + argv + &apos;\&apos; option is missing in &apos; + target.loader.name + &apos; configuration at location: &apos; + path.normalize(path.resolve(target.process, target.loader.ioFileName)))
         }
       }
+      debug(&apos;after&apos;)
+      debug(meta)
+      debug(parsed.current)
       prev = {meta, data}
       index++
     }
-    debug(parsed)
+
+    // if (typeof parsed.current !== &apos;undefined&apos;) {
+    //   this.module = parsed.current.loader
+    //   this.hasModule = true
+    // }
     return parsed
   }
   get parentCmd () {
@@ -411,7 +460,7 @@ class Io {
   }
 
   /**
-   * Get Argv and parse argv if it's the first argv is called
+   * Get Argv and parse argv if it&apos;s the first argv is called
    * @return {[type]} [description]
    */
   get argv () {
@@ -432,7 +481,7 @@ class Io {
     // debug(this.argv.current.loader.modules)
     // // this.argv.current.
     // if (/bin$/.test(path.dirname(this.argv.process[1].path))) {
-    //   return path.resolve(path.dirname(this.argv.process[1].path), '../')
+    //   return path.resolve(path.dirname(this.argv.process[1].path), &apos;../&apos;)
     // } else {
     //   return path.dirname(this.argv.process[1].path)
     // }
@@ -444,8 +493,8 @@ class Io {
    */
   get inModule () {
     // debug(this.hasModule )
-    if (this.hasModule && this.module) {
-      return this.module.modules[this.cmd] !== 'undefined'
+    if (this.hasModule &amp;&amp; this.module) {
+      return this.module.modules[this.cmd] !== &apos;undefined&apos;
     } else {
       return false
     }
@@ -458,9 +507,9 @@ class Io {
    *                          the engine
    */
   isEngineProcess (pathTo) {
-    let find = utils.escape(path.normalize(this.enginePath)) + '$'
+    let find = utils.escape(path.normalize(this.enginePath)) + &apos;$&apos;
     pathTo = path.normalize(pathTo)
-    let rep = new RegExp(find, 'i').test(pathTo)
+    let rep = new RegExp(find, &apos;i&apos;).test(pathTo)
     // debug(rep)
     return rep
   }
@@ -517,7 +566,7 @@ class Io {
    * to return the first file it find.
    * 
    * @param  {[type]} pathTo The path where you want to start the research
-   * @return {Boolean}        return true if a root file's founded
+   * @return {Boolean}        return true if a root file&apos;s founded
    */
   pathToIoFile (pathTo) {
     let first = true
@@ -528,13 +577,13 @@ class Io {
     do {
       pathTo = path.normalize(pathTo)
       if (!first) {
-        pathTo = path.resolve(pathTo, '../')
+        pathTo = path.resolve(pathTo, &apos;../&apos;)
       } else {
         first = false
       }
       file = path.resolve(pathTo, this.ioFile)
       continu = !(fs.existsSync(file) || pathTo === rootPath)
-      if (!continu && !fs.existsSync(file)) {
+      if (!continu &amp;&amp; !fs.existsSync(file)) {
         pathTo = false
       }
     } while (continu)
@@ -543,3 +592,20 @@ class Io {
 }
 
 module.exports = Io
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "source": "./bin",
+  "destination": "./docs/api",
+  "excludes": ["cmdCreator.js"],
+  "plugins": [{"name": "esdoc-publish-markdown-plugin"}]
+}

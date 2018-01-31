@@ -1,5 +1,8 @@
 {
   "name": "iorizon-core",
+  "engine": {
+    "folder": "iorizon-core"
+  },
   "alias": {
     "sites": "e:/sites",
     "factory": "@sites/myModules/",

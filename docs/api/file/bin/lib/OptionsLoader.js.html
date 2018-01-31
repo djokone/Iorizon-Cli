@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">bin/lib/OptionsLoader.js | iorizon-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Command line tools to set workflow"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="iorizon-cli"><meta property="twitter:description" content="Command line tools to set workflow"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">bin/lib/OptionsLoader.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var Loader = require(&apos;./Loader&apos;)
+var reg = require(&apos;./ioRegex&apos;)
+var utils = require(&apos;./utils&apos;)
+
+class OptionsLoader extends Loader {
+  constructor (ioConfOptions) {
+    super(ioConfOptions)
+  }
+  /**
+   * Parse Option Called trought the ioConfig
+   * @param  {[type]} optionArg [description]
+   * @return {[type]}           [description]
+   */
+  parseOption (optionKey) {
+    let name
+    let shortcut = false
+    let call = optionKey
+    if (typeof this.content[optionKey] === &apos;undefined&apos;) {
+      this.each((v, k) =&gt; {
+        if (new RegExp(optionKey, &apos;i&apos;).test(v)) {
+          shortcut = optionKey
+          optionKey = v
+        }
+      })
+    }
+    if (/\|/.test(optionKey)) {
+      let options = optionKey.split(&apos;|&apos;)
+      for (let option of options) {
+        if (reg.option.normal.test(option)) {
+          name = option.replace(/\-\-/, &apos;&apos;)
+        }
+        if (reg.option.shortcut.test(option)) {
+          shortcut = { name: option.replace(/\-/, &apos;&apos;), key: optionKey}
+        }
+      }
+    } else {
+      name = optionKey.replace(/\-\-/, &apos;&apos;)
+    }
+    return {
+      key: optionKey,
+      name,
+      shortcut,
+      call
+    }
+  }
+  /**
+   * Parse Option Value In Configuration file
+   * @param  {[Array|Object|String|Number]}  value - Value to parse
+   * @param  {Boolean} isRoot If it&apos;s call form inside
+   * @return {Object} exemple : { meta: { type: &apos;number&apos;, reg: /[0-9]+/, value: 0 }
+   */
+  parseOptionValue (value, isRoot = true) {
+    let res = {
+      meta: {}
+    }
+    if (isRoot)
+      res.argCount = 1
+    if (Array.isArray(value)) {
+      res.argCount = value.length
+      res.meta = {}
+      if (res.argCount &gt; 1) {
+        res.meta = []
+      }
+      res.value = []
+      for (let v of value) {
+        let parentRes = this.parseOptionValue(v, false)
+        if (res.argCount === 1) {
+          res.value = parentRes.value
+          res.meta = parentRes.meta
+        } else {
+          res.meta.push(parentRes.meta)
+          res.value.push(parentRes.value)
+        }
+      }
+    }
+    if (typeof value === &apos;string&apos;) {
+      // here to add some new option custom type
+      if (typeof reg.option.value[value.toLowerCase()] !== &apos;undefined&apos;) {
+        value = value.toLowerCase()
+        res.meta.type = value
+        res.meta.reg = reg.option.value[value]
+        if (value === &apos;number&apos;) {
+          res.value = res.meta.value = 0
+        }
+      } else if (value.toLowerCase() === &apos;array&apos;) {
+        res.meta.type = value.toLowerCase()
+        res.value = res.meta.value = []
+      } else if (value.toLowerCase() === &apos;boolean&apos;) {
+        res.meta.type = value.toLowerCase()
+        res.value = res.meta.value = false
+      } else if (value.toLowerCase() === &apos;object&apos;) {
+        res.meta.type = value.toLowerCase()
+        res.value = res.meta.value = {}
+      }
+      else {
+        // @todo : parse function for array and object
+        res.meta.type = &apos;String&apos;
+        res.value = res.meta.value = value
+      }
+    } else if (typeof value === &apos;boolean&apos; || typeof value === &apos;number&apos;) {
+      res.meta.type = typeof value
+      res.value = value
+    }
+    if (res.meta.type === &apos;boolean&apos; &amp;&amp; res.argCount === 1) {
+      res.argCount = 0
+    }
+    return res
+  }
+  getOption () {
+  }
+  get (name) {
+    let res = {
+      meta: {}
+    }
+    res.meta.option = this.parseOption(name)
+    res.key = res.meta.option.key
+    // console.log(this.content[res.key])
+    if (typeof this.content[res.key] !== &apos;undefined&apos;) {
+      let optionValue = this.parseOptionValue(this.content[res.key])
+      res.meta.argCount = optionValue.argCount
+      res.value = optionValue.value
+      res.meta.value = optionValue.meta
+    } else {
+      return false
+    }
+    return res
+  }
+}
+
+module.exports = OptionsLoader</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

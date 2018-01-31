@@ -56,7 +56,7 @@ class AliasLoader extends Loader{
     if (typeof this.paths[alias] !== 'undefined') {
       return this.paths[alias]
     } else {
-      console.warn('Can\'t find alias : ' + alias + ', are you sure that the alias has been registred before ?')
+      throw new Error('Can\'t find alias : "' + alias + '", are you sure that the alias has been registred before ?')
       return false
     }
   }

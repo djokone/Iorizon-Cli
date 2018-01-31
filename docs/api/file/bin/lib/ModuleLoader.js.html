@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">bin/lib/ModuleLoader.js | iorizon-cli</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Command line tools to set workflow"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="iorizon-cli"><meta property="twitter:description" content="Command line tools to set workflow"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+</header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  </ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">bin/lib/ModuleLoader.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">var Loader = require(&apos;./Loader&apos;);
+var {spawn} = require(&apos;child_process&apos;);
+var clone = require(&apos;lodash/clone&apos;);
+var OptionsLoader = require(&apos;./OptionsLoader&apos;)
+var path = require(&apos;path&apos;);
+var fs = require(&apos;fs&apos;)
+
+class ModuleLoader extends Loader {
+  constructor (ioConfModule, alias) {
+    super(ioConfModule)
+    this.argv = false
+    this.relativeReg = /^.\//
+    this.alias = alias
+    this.isLoaded = true
+  }
+  has (name) {
+    return typeof this.content[name] !== &apos;undefined&apos;
+  }
+  hasConfFile (module) {
+    if (this.hasUrl(module)) {
+      return fs.existsSync(this.getUrl(module))
+    } else {
+      return false
+    }
+  }
+  getModuleOptions (name) {
+    let res = {}
+    if (this.has(name)) {
+      let opt = new OptionsLoader (this.content[name])
+      opt.each((v, k) =&gt; {
+        let o = opt.get(v)
+        res[o.meta.option.name] = o.value
+      })
+    }
+    return res
+  }
+  getUrl(module, rootPath = process.cwd()) {
+    // console.log(rootPath)
+    let url = false
+    if (this.has(module)) {
+      url = this.alias.parseUrl(this.content[module].url)
+    }
+    
+    // console.log(this.argv)
+    if (this.relativeReg.test(url)) {
+      url = path.resolve(rootPath, url)
+    }
+    return url
+  }
+  hasUrl(module) {
+    return typeof this.content[module].url !== &apos;undefined&apos;
+  }
+
+  buildRequest (argv) {
+    let processus = []
+    // console.log(argv)
+    if (typeof argv.current !== &apos;undefined&apos;) {
+      let currentProcess = this.buildProcess(argv.current, true)
+      // console.log(currentProcess)
+      processus.push(...currentProcess)
+    }
+    return processus
+  }
+  buildOptions (optToBuild) {
+    let res = []
+    for (let option in optToBuild) {
+      let opt = optToBuild[option]
+      res.push(opt.key)
+      if (Array.isArray(opt.value)) {
+          res.push(...opt.value)
+      } else if (typeof opt.value !== &apos;boolean&apos;) {
+        res.push(opt.value)
+      }
+    } return res
+  }
+  buildCmd (cmdToBuild) {
+    let res = []
+    for (let command in cmdToBuild) {
+      let cmd = cmdToBuild[command]
+      res.push(command)
+      // console.log(cmd)
+      res.push(...this.buildOptions(cmd.options))
+    }
+    return res
+  }
+  buildProcess (processus, current = false) {
+    let res = []
+    if (!current) {
+      res.push(processus.process)
+    }
+    res.push(...this.buildCmd(processus.cmd))
+    if (current) {
+      res.push(processus.process)
+    }
+    res.push(...this.buildCmd(processus.currentCmd))
+    res.push(...this.buildOptions(processus.options))
+    // console.log(res)
+    return res
+  }
+  run (name, argv, mode = &apos;spawn&apos;) {
+    let globalOptions = []
+    let childParams = this.buildRequest(argv)
+
+    let fileToRun = false
+
+    if (this.has(name) &amp;&amp; this.hasUrl(name)) {
+      fileToRun = this.getUrl(name, argv.current.loader.url)
+    } else {
+      return false
+      console.error(&apos;Your &apos; + name + &apos; module has no url params !&apos;)
+    }
+    if (fileToRun) {
+      let child = false
+      if (mode === &apos;spawn&apos;) {
+        let child = spawn(&apos;node &apos; + fileToRun, childParams, { stdio: &apos;inherit&apos;, shell: true })
+      } else if (mode === &apos;spawnSync&apos;){
+        let child = spawn.sync(fileToRun, childParams, { stdio: &apos;inherit&apos; })
+      }
+      if (child) {
+        child.on(&apos;error&apos;, (err) =&gt; {
+          console.error(err)
+          console.error(err)
+        })
+        child.on(&apos;data&apos;, (data) =&gt; {
+          console.log(data)
+        })
+      }
+    }
+    
+  }
+}
+
+module.exports = ModuleLoader
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.0.4)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

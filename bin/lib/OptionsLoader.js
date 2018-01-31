@@ -45,7 +45,7 @@ class OptionsLoader extends Loader {
   }
   /**
    * Parse Option Value In Configuration file
-   * @param  {[Array||Object||String||Number]}  value  Value to parse
+   * @param  {[Array|Object|String|Number]}  value - Value to parse
    * @param  {Boolean} isRoot If it's call form inside
    * @return {Object} exemple : { meta: { type: 'number', reg: /[0-9]+/, value: 0 }
    */

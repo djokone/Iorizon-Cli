@@ -1,0 +1,38 @@
+[
+  {
+    "name": "OptionsLoader#parseOption",
+    "filePath": "bin/lib/OptionsLoader.js",
+    "lines": [
+      {
+        "lineNumber": 8,
+        "line": "  /**\r"
+      },
+      {
+        "lineNumber": 9,
+        "line": "   * Parse Option Called trought the ioConfig\r"
+      },
+      {
+        "lineNumber": 10,
+        "line": "   * @param  {[type]} optionArg [description]\r"
+      },
+      {
+        "lineNumber": 11,
+        "line": "   * @return {[type]}           [description]\r"
+      },
+      {
+        "lineNumber": 12,
+        "line": "   */\r"
+      },
+      {
+        "lineNumber": 13,
+        "line": "  parseOption (optionKey) {\r"
+      }
+    ],
+    "codeParams": [
+      "optionKey"
+    ],
+    "docParams": [
+      "optionArg"
+    ]
+  }
+]
