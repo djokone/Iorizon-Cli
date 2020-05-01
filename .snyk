@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.10.1
+version: v1.14.1
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:cli:20160615':
@@ -78,3 +78,12 @@ patch:
   'npm:uglify-js:20150824':
     - consolelog > grunt-contrib-uglify > uglify-js:
         patched: '2018-01-10T18:28:02.448Z'
+  SNYK-JS-LODASH-567746:
+    - lodash:
+        patched: '2020-05-01T07:04:16.739Z'
+    - snyk > inquirer > lodash:
+        patched: '2020-05-01T07:04:16.739Z'
+    - snyk > snyk-resolve-deps > lodash:
+        patched: '2020-05-01T07:04:16.739Z'
+    - snyk > snyk-go-plugin > graphlib > lodash:
+        patched: '2020-05-01T07:04:16.739Z'
