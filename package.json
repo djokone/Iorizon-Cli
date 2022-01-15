@@ -36,7 +36,7 @@
     "fs": "0.0.1-security",
     "lodash": "^4.17.4",
     "pretty-print": "^1.1.0",
-    "shelljs": "^0.7.8",
+    "shelljs": "^0.8.5",
     "stacktrace-js": "^2.0.0",
     "write-json": "^2.0.0",
     "snyk": "^1.67.0"
