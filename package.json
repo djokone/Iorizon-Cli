@@ -30,7 +30,7 @@
     "chalk": "^2.3.0",
     "cli-table-redemption": "^1.0.1",
     "commander": "^2.11.0",
-    "cross-spawn": "^5.1.0",
+    "cross-spawn": "^7.0.5",
     "file-exists-promise": "^1.0.2",
     "font-ascii": "^1.1.16",
     "fs": "0.0.1-security",
